@@ -1,6 +1,7 @@
 package com.raquelmc.springApp.model;
 
 import java.time.Instant;
+import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -21,7 +22,7 @@ public class Statistic {
 	private String id;
 	private double mean;// media
 	private double median;// mediana
-	private double mode;// moda
+	private List<Double> mode;// moda //Puede haber n modas
 	private double standardDesviation;
 	private double quartiles;
 	private double maxValue;
@@ -34,7 +35,7 @@ public class Statistic {
 	public Statistic() {
 	}
 
-	public Statistic(String id, double mean, double median, double mode, double standardDesviation, double quartiles,
+	public Statistic(String id, double mean, double median, List<Double> mode, double standardDesviation, double quartiles,
 			double maxValue, double minValue, Instant createdDate, Instant lastModifiedDate) {
 		super();
 		this.id = id;
@@ -73,11 +74,11 @@ public class Statistic {
 		this.median = median;
 	}
 
-	public double getMode() {
+	public List<Double> getMode() {
 		return mode;
 	}
 
-	public void setMode(double mode) {
+	public void setMode(List<Double> mode) {
 		this.mode = mode;
 	}
 
