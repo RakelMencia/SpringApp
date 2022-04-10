@@ -1,6 +1,8 @@
 package com.raquelmc.springApp;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,11 +34,16 @@ public class Helper {
 		List<Double> doubleListOfValues = null;
 		if (info != null && !info.isEmpty()) {
 			statistict = new Statistic();
-			doubleListOfValues = mapToList(getRequestValues(info));
-			statistict.setMean(getMean(doubleListOfValues));
-			statistict.setMedian(getMedian(doubleListOfValues));
-			statistict.setMode(getMode(doubleListOfValues));
-			statistict.setStandardDesviation(getStandardDesviation(doubleListOfValues, statistict.getMean()));
+			if (getRequestValues(info)!=null && !getRequestValues(info).isEmpty()) {
+				doubleListOfValues = mapToList(getRequestValues(info));
+				statistict.setMean(getMean(doubleListOfValues));
+				statistict.setMedian(getMedian(doubleListOfValues));
+				statistict.setMode(getMode(doubleListOfValues));
+				statistict.setStandardDesviation(getStandardDesviation(doubleListOfValues, statistict.getMean()));
+				statistict.setQuartiles(getQuartiles(doubleListOfValues));
+				statistict.setMaxValue(getMaxValue(doubleListOfValues));
+				statistict.setMinValue(getMinValue(doubleListOfValues));
+			}			
 		}
 		return statistict;
 	}
@@ -118,6 +125,45 @@ public class Helper {
 								// varianza
 		}
 		return Math.sqrt(variance / doubleValues.size());
+	}
+	
+	private List<Double> getQuartiles(List<Double> doubleValues) {
+		//Método de Moore y McCabe
+		double[] quartiles = new double[3];
+		double q1=0;
+		double q2=0;
+		double q3=0;
+		List<Double> sortedList = doubleValues.stream().sorted().collect(Collectors.toList());
+		q2 = this.getMedian(doubleValues);//Mediana = Q2
+		quartiles[1]=q2;
+		List<Double> first = new ArrayList<Double>();
+		List<Double> second = new ArrayList<Double>();	
+		
+		for (int i = 0; i < sortedList.size() / 2; i++)
+            first.add(sortedList.get(i));
+        
+        for (int i = sortedList.size() / 2; i < sortedList.size(); i++)
+            second.add(sortedList.get(i));
+        
+		if(sortedList.size()%2>0) {//Impar
+			second.remove(0);
+			q1 = this.getMedian(first);//Mediana = Q1
+			q3 = this.getMedian(second);//Mediana = Q3
+		} else if (sortedList.size()%2==0) {//Par
+			q1 = this.getMedian(first);//Mediana = Q1
+			q3 = this.getMedian(second);//Mediana = Q3
+		}
+		quartiles[0]=q1;
+		quartiles[2]=q3;
+		return Arrays.stream(quartiles).boxed().collect(Collectors.toList());
+	}
+	
+	private double getMaxValue(List<Double> doubleValues) {
+		return doubleValues.stream().max(Comparator.naturalOrder()).get();
+	}
+	
+	private double getMinValue(List<Double> doubleValues) {
+		return doubleValues.stream().min(Comparator.naturalOrder()).get();
 	}
 
 	public void save(Statistic document) {

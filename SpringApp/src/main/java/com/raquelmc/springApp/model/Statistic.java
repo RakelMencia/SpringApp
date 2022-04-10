@@ -24,7 +24,7 @@ public class Statistic {
 	private double median;// mediana
 	private List<Double> mode;// moda //Puede haber n modas
 	private double standardDesviation;
-	private double quartiles;
+	private List<Double> quartiles;//3 cuartiles
 	private double maxValue;
 	private double minValue;
 	@CreatedDate
@@ -35,7 +35,7 @@ public class Statistic {
 	public Statistic() {
 	}
 
-	public Statistic(String id, double mean, double median, List<Double> mode, double standardDesviation, double quartiles,
+	public Statistic(String id, double mean, double median, List<Double> mode, double standardDesviation, List<Double> quartiles,
 			double maxValue, double minValue, Instant createdDate, Instant lastModifiedDate) {
 		super();
 		this.id = id;
@@ -90,11 +90,11 @@ public class Statistic {
 		this.standardDesviation = standardDesviation;
 	}
 
-	public double getQuartiles() {
+	public List<Double> getQuartiles() {
 		return quartiles;
 	}
 
-	public void setQuartiles(double quartiles) {
+	public void setQuartiles(List<Double> quartiles) {
 		this.quartiles = quartiles;
 	}
 
