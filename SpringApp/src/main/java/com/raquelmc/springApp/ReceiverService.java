@@ -1,44 +1,52 @@
-package com.raquelmc.springApp.rabbitmq;
+/*
+ * Listener
+ */
+package com.raquelmc.springApp;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
+import java.util.List;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.rabbitmq.client.Channel;
-import com.raquelmc.springApp.Helper;
-import com.raquelmc.springApp.model.AnalyticsInfo;
 import com.raquelmc.springApp.model.Request;
 import com.raquelmc.springApp.model.Statistic;
-import com.raquelmc.springApp.repository.StatisticRepository;
 import org.springframework.amqp.support.AmqpHeaders;
 
-@Component
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ReceiverService.
+ */
+@Service
 public class ReceiverService {
 
-	@Autowired
-	private StatisticRepository repository;
+	/** The helper. */
 	@Autowired
 	private Helper helper;
 
-	@RabbitListener(queues = MessagingConfig.QUEUE)
+	/**
+	 * Consume message from queue.
+	 *
+	 * @param request the request
+	 * @param channel the channel
+	 * @param tag the tag
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	@RabbitListener(queues = Constants.QUEUE)
 	public void consumeMessageFromQueue(Request request, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag)
 			throws IOException {
 		try {
-			ArrayList<AnalyticsInfo> info = request.getDatastreams();
-			System.out.println("Mensaje recibido2: " + info);
-			Statistic st = helper.createStatistic(info);
-			System.out.println("Statistic object" + st);
+			List<Statistic> stList = helper.createStatistic(request.getDatastreams());
+			if (!stList.isEmpty()) {
+				helper.saveAll(stList);
+			}	
 		} catch (Exception e) {
-			channel.basicReject(tag, true);
-		}
-
+			e.printStackTrace();
+			channel.basicNack(tag, false, true);
+		}		
 		channel.basicAck(tag, false);
-
 	}
 
 }
