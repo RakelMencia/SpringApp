@@ -5,6 +5,9 @@ package com.raquelmc.springApp;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
@@ -25,6 +28,9 @@ public class ReceiverService {
 	/** The helper. */
 	@Autowired
 	private Helper helper;
+	
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(Constants.RECEIVER_LOG);
 
 	/**
 	 * Consume message from queue.
@@ -41,12 +47,16 @@ public class ReceiverService {
 			List<Statistic> stList = helper.createStatistic(request.getDatastreams());
 			if (!stList.isEmpty()) {
 				helper.saveAll(stList);
-			}	
+			} else {
+				LOGGER.log(Level.WARNING, Constants.VALUES_EMPTY);
+			}
+		} catch (NullPointerException e) {
+			LOGGER.log(Level.SEVERE, Constants.NULLP_ERROR);
 		} catch (Exception e) {
 			e.printStackTrace();
-			channel.basicNack(tag, false, true);
-		}		
-		channel.basicAck(tag, false);
+		} finally {	
+			channel.basicAck(tag, false);
+		}
 	}
 
 }

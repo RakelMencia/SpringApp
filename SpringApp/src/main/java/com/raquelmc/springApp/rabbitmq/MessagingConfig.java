@@ -19,7 +19,7 @@ import org.springframework.amqp.support.converter.MessageConverter;
  */
 @Configuration
 public class MessagingConfig {
-	
+		
 	/**
 	 * Queue.
 	 *

@@ -1,0 +1,41 @@
+version: '3'
+services:  
+  rabbitmq-micro-streaming-analytics:
+    container_name: rabbitmq-micro-streaming-analytics
+    image: rabbitmq:management-alpine
+    volumes:
+      - ./data:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_NODENAME=rabbitmq
+    restart: always
+  mongodb-micro-streaming-analytics:
+    container_name: "mongodb-micro-streaming-analytics"
+    image: mongo:latest
+    hostname: mongodb-host
+    restart: always
+    environment:
+      MONGO_DATA_DIR: /data/db
+      MONGO_LOG_DIR: /dev/null
+    volumes:
+      - ./data/init-mongo.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    ports:
+      - "27017:27017"
+  micro-streaming-analytics:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: micro-streaming-analytics
+    hostname: micro-streaming-analytics
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb-micro-streaming-analytics
+      - rabbitmq-micro-streaming-analytics
+    
+
+
+  
+

@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,10 @@ public class Helper {
 	/** The repository. */
 	@Autowired
 	private StatisticRepository repository;
+	
+	/** The Constant LOGGER. */
+	private final static Logger LOGGER = Logger.getLogger(Constants.HELPER_LOG);
+
 
 	/**
 	 * Creates the statistic.
@@ -85,7 +91,7 @@ public class Helper {
 				fullResult.add(result);
 			} catch (IllegalArgumentException e) {
 				// Controlamos que no se meta un double
-				System.out.println(Constants.NAN);
+				LOGGER.log(Level.WARNING,Constants.NAN);
 			}
 		}
 		return fullResult;
@@ -102,7 +108,7 @@ public class Helper {
 		for (Map<String, Object> map : mapValues) {
 			Double value = valueValidator(map);
 			if (value == null) {// El valor introducio no es válido por no ser un dato numérico
-				System.out.println(Constants.NAN2);
+				LOGGER.log(Level.WARNING,Constants.NAN2);
 			} else {
 				list2.add(value);
 			}
@@ -243,7 +249,7 @@ public class Helper {
 				q1 = this.getMedian(first);// Mediana = Q1
 				q3 = this.getMedian(second);// Mediana = Q3
 			} else {
-				System.out.println(Constants.QUARTILES_INFO);
+				LOGGER.log(Level.WARNING,Constants.QUARTILES_INFO);
 			}
 		} else if (sortedList.size() % 2 == 0) {// Par
 			q1 = this.getMedian(first);// Mediana = Q1
@@ -282,9 +288,9 @@ public class Helper {
 	public void save(Statistic document) {
 		if (document != null) {
 			repository.save(document);
-			System.out.println(Constants.OK_MONGO);
+			LOGGER.log(Level.INFO,Constants.OK_MONGO);
 		} else {
-			System.out.println(Constants.KO_MONGO);
+			LOGGER.log(Level.WARNING,Constants.KO_MONGO);
 		}
 	}
 
@@ -296,9 +302,9 @@ public class Helper {
 	public void saveAll(List<Statistic> document) {
 		if (document != null && !document.isEmpty()) {
 			repository.saveAll(document);
-			System.out.println(Constants.OK_MONGO);
+			LOGGER.log(Level.INFO,Constants.OK_MONGO);
 		} else {
-			System.out.println(Constants.KO_MONGO);
+			LOGGER.log(Level.WARNING,Constants.KO_MONGO);
 		}
 	}
 }

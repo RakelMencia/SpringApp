@@ -48,4 +48,25 @@ public class Constants {
 	/** The Constant IS_DURABLE_QUEUE. */
 	//Rabbit isDurable
 	public static final boolean IS_DURABLE_QUEUE = false;
+	
+	/** The Constant NULLP_ERROR. */
+	public static final String NULLP_ERROR = "Elementos vacíos, no se puede procesar. No se ha podido persistir el registro en bbdd.";
+	
+	/** The Constant VALUES_EMPTY. */
+	public static final String VALUES_EMPTY = "No hay elementos para realizar el cálculo, no se persistirá ningún objeto en bbdd.";
+	
+	/** The Constant MAIN_PACK. */
+	public static final String MAIN_PACK = "com.raquelmc.springApp";
+	
+	/** The Constant LOG_FILENAME. */
+	public static final String LOG_FILENAME = "./Analytics.log";
+	
+	/** The Constant RECEIVER_LOG. */
+	public static final String RECEIVER_LOG = "com.raquelmc.springApp.ReceiverService";
+	
+	/** The Constant HELPER_LOG. */
+	public static final String HELPER_LOG = "com.raquelmc.springApp.ReceiverService";
+	
+	public static final String MAIN_LOG = "com.raquelmc.springApp.SpringAppApplication";
+
 }
