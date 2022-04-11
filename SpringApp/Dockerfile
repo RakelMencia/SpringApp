@@ -3,5 +3,5 @@ COPY ./ ./
 RUN mvn clean package
 
 FROM openjdk:8-jre-alpine3.9
-COPY --from=MAVEN_BUILD ./target/SpringApp-0.0.1-SNAPSHOT.jar /SpringApp-0.0.1-SNAPSHOT.jar
-CMD ["java", "-jar", "/SpringApp-0.0.1-SNAPSHOT.jar"]
+COPY --from=MAVEN_BUILD ./target/SpringApp-0.0.1.jar /SpringApp-0.0.1.jar
+CMD ["java", "-jar", "/SpringApp-0.0.1.jar"]
