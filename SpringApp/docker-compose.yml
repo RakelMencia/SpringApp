@@ -4,7 +4,7 @@ services:
     container_name: rabbitmq-micro-streaming-analytics
     image: rabbitmq:management-alpine
     volumes:
-      - ./data:/var/lib/rabbitmq
+      - ./data:/var/lib/rabbitmq/test
     ports:
       - "5672:5672"
       - "15672:15672"
